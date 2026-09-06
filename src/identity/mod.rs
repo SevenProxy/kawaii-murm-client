@@ -1,14 +1,5 @@
-use ed25519_dalek::{
-    Signature,
-    Signer,
-    SigningKey,
-    Verifier,
-    VerifyingKey,
-};
-use rand::{
-    rand_core::UnwrapErr,
-    rngs::SysRng,
-};
+use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
+use rand::{rand_core::UnwrapErr, rngs::SysRng};
 
 // NAME
 const STORAGE_KEY: &str = "murm_identity";
@@ -26,13 +17,19 @@ impl Identity {
     pub fn generate() -> Self {
         let signing_key = SigningKey::generate(&mut UnwrapErr(SysRng));
         let verifying_key = signing_key.verifying_key();
-        Self { signing_key, verifying_key }
+        Self {
+            signing_key,
+            verifying_key,
+        }
     }
 
     pub fn from_secret_bytes(secret: &[u8; 32]) -> Self {
         let signing_key = SigningKey::from_bytes(secret);
         let verifying_key = signing_key.verifying_key();
-        Self { signing_key, verifying_key }
+        Self {
+            signing_key,
+            verifying_key,
+        }
     }
 
     pub fn pubkey_hex(&self) -> String {
@@ -43,7 +40,11 @@ impl Identity {
         self.signing_key.sign(message)
     }
 
-    pub fn verify(&self, message: &[u8], signature: &Signature) -> Result<(), ed25519_dalek::SignatureError> {
+    pub fn verify(
+        &self,
+        message: &[u8],
+        signature: &Signature,
+    ) -> Result<(), ed25519_dalek::SignatureError> {
         self.verifying_key.verify(message, signature)
     }
 
@@ -54,7 +55,10 @@ impl Identity {
     pub fn from_secret_hex(hex_str: &str) -> anyhow::Result<Self> {
         let bytes = hex::decode(hex_str.trim())?;
         let secret: [u8; 32] = bytes.as_slice().try_into().map_err(|_| {
-            anyhow::anyhow!("identity must contain exactly 32 bytes, got {}", bytes.len())
+            anyhow::anyhow!(
+                "identity must contain exactly 32 bytes, got {}",
+                bytes.len()
+            )
         })?;
         Ok(Self::from_secret_bytes(&secret))
     }

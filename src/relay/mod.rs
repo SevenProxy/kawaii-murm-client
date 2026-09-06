@@ -1,9 +1,6 @@
 use anyhow::Result;
 use reqwest::StatusCode;
-use serde::{
-    Deserialize,
-    Serialize,
-};
+use serde::{Deserialize, Serialize};
 
 use crate::event::event::Payload;
 use crate::event::filters::EventFilter;
@@ -87,7 +84,9 @@ impl RelayClient {
         let response = self
             .http
             .post(self.url("/submit"))
-            .json(&SubmitRequest { events: events.to_vec() })
+            .json(&SubmitRequest {
+                events: events.to_vec(),
+            })
             .send()
             .await?;
 

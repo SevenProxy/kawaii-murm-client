@@ -1,7 +1,4 @@
-use serde::{
-    Deserialize,
-    Serialize,
-};
+use serde::{Deserialize, Serialize};
 
 /// Base client configuration.
 #[derive(Serialize, Deserialize, Debug, Clone)]

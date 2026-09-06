@@ -1,7 +1,7 @@
-pub mod home;
-pub mod generate;
 pub mod app;
+pub mod generate;
+pub mod home;
 
-pub use home::HomePage;
-pub use generate::GeneratePage;
 pub use app::AppPage;
+pub use generate::GeneratePage;
+pub use home::HomePage;

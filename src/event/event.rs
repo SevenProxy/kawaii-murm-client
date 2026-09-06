@@ -1,21 +1,8 @@
-use std::time::{
-    SystemTime,
-    UNIX_EPOCH,
-};
+use std::time::{SystemTime, UNIX_EPOCH};
 
-use ed25519_dalek::{
-    Signature,
-    Verifier,
-    VerifyingKey,
-};
-use serde::{
-    Deserialize,
-    Serialize,
-};
-use sha2::{
-    Digest,
-    Sha256,
-};
+use ed25519_dalek::{Signature, Verifier, VerifyingKey};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 use crate::identity::Identity;
 
@@ -111,7 +98,9 @@ impl Payload {
 
     /// Size of the serialized event JSON, for the MIP-01 size limit.
     pub fn size_bytes(&self) -> usize {
-        serde_json::to_vec(self).map(|bytes| bytes.len()).unwrap_or(0)
+        serde_json::to_vec(self)
+            .map(|bytes| bytes.len())
+            .unwrap_or(0)
     }
 
     pub fn size_ok(&self) -> bool {
@@ -148,9 +137,8 @@ impl Payload {
             Ok(key) => key,
             Err(_) => return false,
         };
-        let signature = Signature::from_bytes(
-            sig_bytes.as_slice().try_into().expect("checked length"),
-        );
+        let signature =
+            Signature::from_bytes(sig_bytes.as_slice().try_into().expect("checked length"));
 
         verifying_key.verify(&id_bytes, &signature).is_ok()
     }
@@ -177,14 +165,22 @@ mod tests {
     #[test]
     fn canonical_payload_is_compact() {
         let identity = Identity::generate();
-        let event = Event::new(identity.pubkey_hex(), 1, vec![tags::topic("murm")], "hello".into());
+        let event = Event::new(
+            identity.pubkey_hex(),
+            1,
+            vec![tags::topic("murm")],
+            "hello".into(),
+        );
 
         let json = event.canonical_payload();
         assert!(!json.contains(' '));
         assert!(!json.contains('\n'));
         assert_eq!(
             json,
-            format!("[\"{}\",{},1,[[\"topic\",\"murm\"]],\"hello\"]", event.pubkey, event.created_at)
+            format!(
+                "[\"{}\",{},1,[[\"topic\",\"murm\"]],\"hello\"]",
+                event.pubkey, event.created_at
+            )
         );
     }
 
@@ -202,7 +198,12 @@ mod tests {
     #[test]
     fn tampered_event_is_rejected() {
         let identity = Identity::generate();
-        let event = Event::new(identity.pubkey_hex(), kinds::POST, vec![], "original".into());
+        let event = Event::new(
+            identity.pubkey_hex(),
+            kinds::POST,
+            vec![],
+            "original".into(),
+        );
 
         let mut payload = event.sign(&identity);
         assert!(payload.verify());

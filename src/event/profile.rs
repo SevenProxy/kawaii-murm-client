@@ -23,15 +23,9 @@
 //! Nada mais precisa mudar nos arquivos existentes — este arquivo só
 //! reutiliza `Event`, `Payload`, `kinds`, `tags` e `Identity` já prontos.
 
-use serde::{
-    Deserialize,
-    Serialize,
-};
+use serde::{Deserialize, Serialize};
 
-use crate::event::event::{
-    Event,
-    Payload,
-};
+use crate::event::event::{Event, Payload};
 use crate::event::kinds;
 use crate::identity::Identity;
 
@@ -188,8 +182,7 @@ mod tests {
 
         let payload = profile.sign(&identity);
 
-        let read = Profile::from_payload(&payload)
-            .expect("payload válido deve virar um perfil");
+        let read = Profile::from_payload(&payload).expect("payload válido deve virar um perfil");
         assert_eq!(read, profile);
     }
 

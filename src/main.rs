@@ -1,8 +1,17 @@
+// Protocol and extension modules are part of the client API surface and are
+// not all consumed by the demo binary yet; keep them linted for style but
+// allow unused items.
+#[allow(dead_code)]
 mod config;
+
+#[allow(dead_code)]
 mod event;
+
+#[allow(dead_code)]
 mod identity;
 
 #[cfg(not(target_arch = "wasm32"))]
+#[allow(dead_code)]
 mod relay;
 
 mod web;
@@ -53,7 +62,10 @@ fn main() {
     println!("id + signature valid: {valid}");
     assert!(valid, "signed event must be valid");
 
-    let tampered = Payload { content: "tampered".to_string(), ..payload };
+    let tampered = Payload {
+        content: "tampered".to_string(),
+        ..payload
+    };
     println!("tampered event valid: {}", tampered.verify());
 }
 

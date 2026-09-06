@@ -7,9 +7,8 @@ use crate::web::router::Route;
 
 #[function_component(HomePage)]
 pub fn home_page() -> Html {
-    let pubkey = use_state(|| -> Option<String> {
-        Identity::load_local().map(|id| id.pubkey_hex())
-    });
+    let pubkey =
+        use_state(|| -> Option<String> { Identity::load_local().map(|id| id.pubkey_hex()) });
 
     let nav = use_navigator().unwrap();
 
@@ -26,7 +25,11 @@ pub fn home_page() -> Html {
 
     let pubkey_display = (*pubkey).clone().unwrap_or_default();
     let short_pk = if pubkey_display.len() > 16 {
-        format!("{}...{}", &pubkey_display[..8], &pubkey_display[pubkey_display.len()-8..])
+        format!(
+            "{}...{}",
+            &pubkey_display[..8],
+            &pubkey_display[pubkey_display.len() - 8..]
+        )
     } else {
         pubkey_display.clone()
     };
